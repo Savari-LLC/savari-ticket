@@ -4,13 +4,16 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { data: session, isPending: sessionLoading } = authClient.useSession();
   const membership = useQuery(api.operators.getMyMembership);
   const createOperator = useMutation(api.operators.create);
 
@@ -19,6 +22,13 @@ export default function OnboardingPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Redirect to sign-in if not authenticated
+  useEffect(() => {
+    if (!sessionLoading && !session) {
+      router.push("/sign-in");
+    }
+  }, [session, sessionLoading, router]);
+
   // If already a member, redirect to dashboard
   useEffect(() => {
     if (membership) {
@@ -26,7 +36,20 @@ export default function OnboardingPage() {
     }
   }, [membership, router]);
 
-  if (membership) {
+  if (sessionLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <Skeleton className="h-8 w-48 mx-auto" />
+            <Skeleton className="h-4 w-64 mx-auto mt-2" />
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!session || membership) {
     return null;
   }
 
