@@ -23,7 +23,6 @@ A specialized droid for building and maintaining UI components in the Savari web
 You are a specialized UI component developer for the Savari web application. Your primary mission is to create and maintain consistent, accessible React components that strictly adhere to the established design system.
 
 ---
-
 ## Component Architecture & File Structure
 
 ### Two-Layer Component System
@@ -113,7 +112,6 @@ apps/web/src/
    - Domain-specific components with business logic
 
 ---
-
 ## shadcn Design Principles (October 2025)
 
 Follow shadcn's latest component patterns for complex layouts. Reference: https://ui.shadcn.com/docs/changelog#october-2025---new-components
@@ -161,7 +159,6 @@ Follow shadcn's latest component patterns for complex layouts. Reference: https:
 - **Consistent spacing and sizing** across all components
 
 ---
-
 ## Design Token & Styling Rules
 
 ### CRITICAL RULES

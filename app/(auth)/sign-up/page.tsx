@@ -122,7 +122,7 @@ function SignUpForm() {
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link href="/sign-in" className="text-primary hover:underline">
+            <Link href={inviteToken ? `/sign-in?invite=${inviteToken}` : "/sign-in"} className="text-primary hover:underline">
               Sign in
             </Link>
           </div>

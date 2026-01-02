@@ -15,6 +15,7 @@ function InviteContent() {
   const token = searchParams.get("token");
   const { data: session, isPending: sessionLoading } = authClient.useSession();
   const [accepting, setAccepting] = useState(false);
+  const [error, setError] = useState("");
 
   const inviteData = useQuery(
     api.members.getInviteByToken,
@@ -76,12 +77,14 @@ function InviteContent() {
 
   const handleAccept = async () => {
     setAccepting(true);
+    setError("");
     try {
       await acceptInvite({ token });
       const redirectPath = inviteData.invite.role === "user" ? "/operator" : `/${inviteData.invite.role}`;
       router.push(redirectPath);
     } catch (err) {
       console.error("Failed to accept invite:", err);
+      setError(err instanceof Error ? err.message : "Failed to accept invite");
       setAccepting(false);
     }
   };
@@ -96,12 +99,17 @@ function InviteContent() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {error && (
+            <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
+              {error}
+            </div>
+          )}
           <div className="p-4 bg-muted rounded-lg">
             <p className="text-sm text-muted-foreground">Invited as</p>
             <p className="font-semibold capitalize">{inviteData.invite.role}</p>
           </div>
-          <Button onClick={handleAccept} className="w-full">
-            Accept Invitation
+          <Button onClick={handleAccept} className="w-full" disabled={accepting}>
+            {accepting ? "Accepting..." : "Accept Invitation"}
           </Button>
         </CardContent>
       </Card>
