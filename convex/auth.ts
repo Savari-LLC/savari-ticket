@@ -25,6 +25,9 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
             // The Convex plugin is required for Convex compatibility
             convex({ authConfig }),
         ],
+        advanced: {
+            cookiePrefix: "savari-ticket",
+        },
     });
 };
 
