@@ -1,65 +1,175 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Bus, Users, QrCode, BarChart3 } from "lucide-react";
+import Link from "next/link";
+
+export default function HomePage() {
+  const router = useRouter();
+  const membership = useQuery(api.operators.getMyMembership);
+
+  useEffect(() => {
+    if (membership) {
+      router.push(`/${membership.membership.role}`);
+    }
+  }, [membership, router]);
+
+  if (membership === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-muted-foreground">Loading...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen">
+      <header className="border-b">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <h1 className="text-2xl font-bold">Savari Ticket</h1>
+          <div className="flex gap-2">
+            <Link href="/sign-in">
+              <Button variant="ghost">Sign In</Button>
+            </Link>
+            <Link href="/sign-up">
+              <Button>Get Started</Button>
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </header>
+
+      <main>
+        <section className="py-20 px-4">
+          <div className="container mx-auto text-center max-w-3xl">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Passenger Management Made Simple
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              A complete multi-tenant ticket system for transport operators. 
+              Manage routes, track passengers with QR codes, and get real-time insights.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Link href="/sign-up">
+                <Button size="lg">Start Free</Button>
+              </Link>
+              <Link href="/sign-in">
+                <Button size="lg" variant="outline">Sign In</Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 px-4 bg-muted/50">
+          <div className="container mx-auto">
+            <h3 className="text-2xl font-bold text-center mb-12">
+              Built for Modern Transport Operations
+            </h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card>
+                <CardHeader>
+                  <Bus className="h-10 w-10 mb-2 text-primary" />
+                  <CardTitle>Route Management</CardTitle>
+                  <CardDescription>
+                    Create and manage routes with ease. Track active trips in real-time.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <Users className="h-10 w-10 mb-2 text-primary" />
+                  <CardTitle>Multi-Tenant</CardTitle>
+                  <CardDescription>
+                    Each operator has their own isolated workspace with drivers and businesses.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <QrCode className="h-10 w-10 mb-2 text-primary" />
+                  <CardTitle>QR Ticketing</CardTitle>
+                  <CardDescription>
+                    Generate unique QR codes for passengers. Scan and track boardings instantly.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <BarChart3 className="h-10 w-10 mb-2 text-primary" />
+                  <CardTitle>Analytics</CardTitle>
+                  <CardDescription>
+                    Get insights on passenger counts, route performance, and driver activity.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 px-4">
+          <div className="container mx-auto max-w-4xl">
+            <h3 className="text-2xl font-bold text-center mb-12">
+              Three User Roles, One Platform
+            </h3>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Operator</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li>• Create and manage routes</li>
+                    <li>• Invite drivers and businesses</li>
+                    <li>• View comprehensive reports</li>
+                    <li>• Monitor all operations</li>
+                  </ul>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Driver</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li>• Start trips on routes</li>
+                    <li>• Scan passenger QR codes</li>
+                    <li>• View trip history</li>
+                    <li>• Track passenger counts</li>
+                  </ul>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Business</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li>• Add passengers</li>
+                    <li>• Generate QR codes</li>
+                    <li>• Download tickets</li>
+                    <li>• Manage passenger list</li>
+                  </ul>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
       </main>
+
+      <footer className="border-t py-8 px-4">
+        <div className="container mx-auto text-center text-muted-foreground">
+          <p>&copy; 2024 Savari Ticket. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }
