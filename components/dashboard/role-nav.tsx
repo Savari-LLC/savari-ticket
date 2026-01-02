@@ -13,7 +13,7 @@ import {
   ScanLine,
 } from "lucide-react";
 
-type Role = "operator" | "driver" | "business";
+type Role = "operator" | "user" | "driver" | "business";
 
 interface NavItem {
   href: string;
@@ -23,6 +23,12 @@ interface NavItem {
 
 const navItems: Record<Role, NavItem[]> = {
   operator: [
+    { href: "/operator", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/operator/routes", label: "Routes", icon: Route },
+    { href: "/operator/members", label: "Members", icon: Users },
+    { href: "/operator/reports", label: "Reports", icon: BarChart3 },
+  ],
+  user: [
     { href: "/operator", label: "Dashboard", icon: LayoutDashboard },
     { href: "/operator/routes", label: "Routes", icon: Route },
     { href: "/operator/members", label: "Members", icon: Users },

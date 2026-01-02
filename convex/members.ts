@@ -13,7 +13,7 @@ async function requireOperatorRole(ctx: any) {
     .withIndex("by_user", (q: any) => q.eq("userId", user._id))
     .first();
 
-  if (!membership || membership.role !== "operator") {
+  if (!membership || (membership.role !== "operator" && membership.role !== "user")) {
     throw new Error("Only operators can perform this action");
   }
 
@@ -47,7 +47,7 @@ export const createInvite = mutation({
   args: {
     operatorId: v.id("operators"),
     email: v.string(),
-    role: v.union(v.literal("driver"), v.literal("business")),
+    role: v.union(v.literal("user"), v.literal("driver"), v.literal("business")),
   },
   handler: async (ctx, args) => {
     const { membership } = await requireOperatorRole(ctx);

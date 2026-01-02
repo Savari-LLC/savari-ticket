@@ -18,6 +18,7 @@ export default defineSchema({
     userId: v.string(),
     role: v.union(
       v.literal("operator"),
+      v.literal("user"),
       v.literal("driver"),
       v.literal("business")
     ),
@@ -82,7 +83,7 @@ export default defineSchema({
   invites: defineTable({
     operatorId: v.id("operators"),
     email: v.string(),
-    role: v.union(v.literal("driver"), v.literal("business")),
+    role: v.union(v.literal("user"), v.literal("driver"), v.literal("business")),
     token: v.string(),
     createdAt: v.number(),
     expiresAt: v.number(),

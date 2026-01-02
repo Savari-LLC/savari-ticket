@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LogOut, Menu } from "lucide-react";
 
-type Role = "operator" | "driver" | "business";
+type Role = "operator" | "user" | "driver" | "business";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -25,8 +25,13 @@ export function DashboardLayout({ children, expectedRole }: DashboardLayoutProps
   useEffect(() => {
     if (membership === null) {
       router.push("/onboarding");
-    } else if (membership && membership.membership.role !== expectedRole) {
-      router.push(`/${membership.membership.role}`);
+    } else if (membership) {
+      const userRole = membership.membership.role;
+      const isAllowed = userRole === expectedRole || 
+        (expectedRole === "operator" && userRole === "user");
+      if (!isAllowed) {
+        router.push(userRole === "user" ? "/operator" : `/${userRole}`);
+      }
     }
   }, [membership, expectedRole, router]);
 
@@ -41,7 +46,10 @@ export function DashboardLayout({ children, expectedRole }: DashboardLayoutProps
     );
   }
 
-  if (!membership || membership.membership.role !== expectedRole) {
+  const userRole = membership?.membership.role;
+  const isAllowed = userRole === expectedRole || 
+    (expectedRole === "operator" && userRole === "user");
+  if (!membership || !isAllowed) {
     return null;
   }
 
@@ -76,7 +84,7 @@ export function DashboardLayout({ children, expectedRole }: DashboardLayoutProps
             </p>
           </div>
 
-          <RoleNav role={expectedRole} />
+          <RoleNav role={membership.membership.role} />
 
           <div className="mt-auto pt-4 border-t">
             <div className="mb-2">

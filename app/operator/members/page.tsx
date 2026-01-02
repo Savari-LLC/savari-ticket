@@ -38,7 +38,7 @@ export default function MembersPage() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState<"driver" | "business">("driver");
+  const [role, setRole] = useState<"user" | "driver" | "business">("driver");
   const [inviteLink, setInviteLink] = useState("");
 
   const handleCreateInvite = async (e: React.FormEvent) => {
@@ -83,6 +83,7 @@ export default function MembersPage() {
 
   const roleColors: Record<string, "default" | "secondary" | "outline"> = {
     operator: "default",
+    user: "default",
     driver: "secondary",
     business: "outline",
   };
@@ -141,6 +142,14 @@ export default function MembersPage() {
                 <div className="space-y-2">
                   <Label>Role</Label>
                   <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant={role === "user" ? "default" : "outline"}
+                      onClick={() => setRole("user")}
+                      className="flex-1"
+                    >
+                      User
+                    </Button>
                     <Button
                       type="button"
                       variant={role === "driver" ? "default" : "outline"}

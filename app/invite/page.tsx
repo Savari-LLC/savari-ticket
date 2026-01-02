@@ -78,7 +78,8 @@ function InviteContent() {
     setAccepting(true);
     try {
       await acceptInvite({ token });
-      router.push(`/${inviteData.invite.role}`);
+      const redirectPath = inviteData.invite.role === "user" ? "/operator" : `/${inviteData.invite.role}`;
+      router.push(redirectPath);
     } catch (err) {
       console.error("Failed to accept invite:", err);
       setAccepting(false);
