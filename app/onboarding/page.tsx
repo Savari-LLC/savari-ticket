@@ -22,12 +22,14 @@ export default function OnboardingPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Redirect to sign-in if not authenticated
+  // Redirect to sign-in if not authenticated (only after loading completes)
   useEffect(() => {
-    if (!sessionLoading && !session) {
+    // Wait for both session loading to complete AND membership query to settle
+    // membership === undefined means still loading, null means no membership
+    if (!sessionLoading && !session && membership === null) {
       router.push("/sign-in");
     }
-  }, [session, sessionLoading, router]);
+  }, [session, sessionLoading, membership, router]);
 
   // If already a member, redirect to dashboard
   useEffect(() => {
@@ -36,7 +38,8 @@ export default function OnboardingPage() {
     }
   }, [membership, router]);
 
-  if (sessionLoading) {
+  // Show loading while session is loading or membership query hasn't settled
+  if (sessionLoading || membership === undefined) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
@@ -49,7 +52,7 @@ export default function OnboardingPage() {
     );
   }
 
-  if (!session || membership) {
+  if (membership) {
     return null;
   }
 
